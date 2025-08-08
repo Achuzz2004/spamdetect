@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>spam Detect</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+    
+   input,button{
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    width: 200px;
+    margin-bottom: 10px;
+   }
+   #result {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e7f3fe;
+    border: 1px solid #b3d4fc;
+    color: #31708f;
+   }
+
+</style>
+<body>
+    <h2>Spam Detection</h2>
+    
+        <input type="text" id="message" placeholder="Enter your message here">
+        <button onclick="checkSpam()">Check Spam</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function checkSpam(){
+            const msg = document.getElementById('message').value;
+
+            fetch("/api/predict_spam/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message: msg })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const result = data.spam ? "Spam Message":"Not Spam";
+                document.getElementById("result").innerText = result;
+            })
+            .catch(err =>{
+                document.getElementById("result").innerText = "Error"+err;
+            });
+        }
+
+    </script>
+</body>
+</html>
